@@ -15,6 +15,7 @@ mongoose.connect(process.env.MONGO_URI,{ useNewUrlParser: true, useUnifiedTopolo
 dbConnnection.once('open', () => console.log('DB Connection established Successfully'));
 
 app.use([cors(), bodyParser.json()]);
+app.use('/', books);
 app.use('/books', books);
 app.use('/requests', requests);
 app.use('/users', users);
