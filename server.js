@@ -17,6 +17,7 @@ dbConnnection.once('open', () => console.log('DB Connection established Successf
 app.use([cors(), bodyParser.json()]);
 app.use('/books', books);
 app.use('/requests', requests);
+app.use('/users', users);
 
 app.get('/', function(req, res) {
     res.send('Lib-Mate App Service');
