@@ -1,25 +1,23 @@
 const express = require('express');
 const mongoose  =require('mongoose');
-const bodyParser = require('body-parser');
 const env = require('dotenv');
 const cors = require('cors');
-const books = require('./src/routes/books.routes');
-const requests = require('./src/routes/requests.routes');
 const users = require('./src/routes/users.routes');
 const app = express();
 env.config();
-const PORT = process.env.PORT || 4001;
+const PORT = process.env.AUTH_PORT || 4000;
 
 const dbConnnection = mongoose.connection;
 mongoose.connect(process.env.MONGO_URI,{ useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true });
 dbConnnection.once('open', () => console.log('DB Connection established Successfully'));
 
-app.use([cors(), bodyParser.json()]);
-app.use('/books', books);
-app.use('/requests', requests);
+app.use([cors(), express.json()]);
+app.use('/users', users);
+
 
 app.get('/', function(req, res) {
-    res.send('Lib-Mate App Service');
+    res.send('Authn Service');
 });
 
-app.listen(PORT, () => console.log('App Server running at PORT: ' + PORT))
+
+app.listen(PORT, () => console.log('Authn Server running at PORT: ' + PORT))
