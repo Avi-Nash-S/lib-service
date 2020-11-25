@@ -11,7 +11,7 @@ env.config();
 const PORT = process.env.PORT || 4001;
 
 const dbConnnection = mongoose.connection;
-mongoose.connect(process.env.MONGO_URI,{ useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true });
+mongoose.connect(process.env.MONGO_URI,{ useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true }).catch(err => app.response(500).send(err));
 dbConnnection.once('open', () => console.log('DB Connection established Successfully'));
 
 app.use([cors(), bodyParser.json()]);

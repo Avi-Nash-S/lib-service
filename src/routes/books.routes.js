@@ -1,5 +1,6 @@
 const router = require('express').Router();
 let Book = require('../models/book.model');
+let { authenticateToken } = require('../middlewares/authToken.middleware');
 
 router.route('/').get((req, res) => Book.find().then(books => res.json(books)).catch(err => res.status(400).json('Error: ' + err)));
 
@@ -12,11 +13,12 @@ router.route('/').post((req, res) => {
     });
 });
 
-router.route('/:id').post((req, res) => {
+router.route('/:id').patch((req, res) => {
     const bookId = req.params.id;
     Book.findById(bookId, (err, book) => {
+        if(err) return res.status(400).json(err)
         if(!book) {
-            res.status(404).json({ message: 'Not valid Id'});
+            res.status(404).json({ message: 'Book not found'});
         } else {
             book.isbn = req.body.isbn,
             book.title = req.body.title,
@@ -29,7 +31,33 @@ router.route('/:id').post((req, res) => {
             book.save().then(book => res.status(200).json({message: 'Succesfully Updated Book', bookId: book._id}))
         };
     })
-    
+});
+
+router.route('/return/:id').patch((req, res) => {
+    const bookId = req.params.id;
+    Book.findById(bookId, (err, book) => {
+        if(err) return res.status(400).json(err)
+        if(!book) {
+            res.status(404).json({ message: 'Book not found'});
+        } else {
+            book.available = true;
+            book.save().then(book => res.status(200).json({message: 'Succesfully Updated Book', bookId: book._id}))
+        };
+    })
+});
+
+router.route('/:id').delete(authenticateToken, (req, res) => {
+    const bookId = req.params.id;
+    Book.findById(bookId, (err, book) => {
+        if(err) return res.status(400).json(err)
+        if(!book) {
+            return res.status(404).json({ message: 'Book not found'});
+        } else if(book.ownerId !== req.user._id) {
+            return res.status(404).json({message: 'Access Denied'});
+        } else {
+            Book.deleteOne({_id: book._id}).then(resBook => res.status(200).json({ message: 'Successfully Deleted Book', bookId: resBook._id}));
+        }
+    }) 
 });
 
 module.exports = router;

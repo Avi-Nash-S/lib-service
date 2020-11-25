@@ -4,9 +4,8 @@ const Schema = mongoose.Schema;
 
 const requestSchema = new Schema({
     id: {type: String},
-    requestedById: {type: String},
-    Owner: {type: String},
-    bookId: {type: String},
+    requestedBy: {type: Object},
+    book: {type: Object},
     requestStatus: {type: String}, 
 })
 
