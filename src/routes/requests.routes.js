@@ -107,7 +107,6 @@ router.route('/close/:requestId').patch(authenticateToken, async (req, res) => {
         if (request.requestedBy._id != user) return res.status(403).send('User permission denied');
         Book.findById(request.book._id).then(book => {
             if (!book) return res.status(404).send('Not a Valid Book');
-            if (!book.available) return res.status(400).send('Book not available');
             book.available = true;
             request.book = book;
             request.requestStatus = 'closed';
