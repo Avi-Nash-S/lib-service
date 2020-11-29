@@ -14,7 +14,6 @@ router.route('/user').get(authenticateToken, (req, res) => Request.find().then(r
 router.route('/:id').get((req, res) => Request.findById(req.params.id).then(request => res.json(request)).catch(err => res.status(400).json('Error: ' + err)));
 
 router.route('/create').post(authenticateToken, async (req, res) => {
-    const requestVerifyStatus = ['rejected', 'approved', 'cancelled', 'closed'];
     try {
         const requestor = await User.findById(req.user._id);
         const requestedBy = {
@@ -25,8 +24,8 @@ router.route('/create').post(authenticateToken, async (req, res) => {
         const book = await Book.findById(req.body.bookId);
         if (!book) return res.status(404).send('Not a Valid Book')
         if (!book.available) return res.status(400).send('Book not available');
-        const verifyRequest = await Request.findOne({ book, requestedBy });
-        if (verifyRequest && !requestVerifyStatus.includes(verifyRequest.requestStatus)) return res.status(400).json({ message: "Request is already present", requestId: verifyRequest._id })
+        const verifyRequest = await Request.findOne({ book, requestedBy, requestStatus: 'requested' });
+        if (verifyRequest) return res.status(400).json({ message: "Request is already present", requestId: verifyRequest._id })
         const request = new Request({
             requestedBy,
             book: book,
