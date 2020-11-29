@@ -25,7 +25,7 @@ router.route('/create').post(authenticateToken, async (req, res) => {
         if (!book) return res.status(404).send('Not a Valid Book')
         if (!book.available) return res.status(400).send('Book not available');
         const verifyRequest = await Request.findOne({ book, requestedBy });
-        if (verifyRequest && book.available && (verifyRequest.requestStatus !== 'rejected' || verifyRequest.requestStatus !== 'cancelled' || verifyRequest.requestStatus !== 'closed')) return res.status(400).json({ message: "Request is already present", requestId: verifyRequest._id })
+        if (verifyRequest && book.available && (verifyRequest.requestStatus === 'rejected' || verifyRequest.requestStatus === 'cancelled' || verifyRequest.requestStatus === 'closed')) return res.status(400).json({ message: "Request is already present", requestId: verifyRequest._id })
         const request = new Request({
             requestedBy,
             book: book,
