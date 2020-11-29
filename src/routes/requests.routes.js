@@ -85,7 +85,8 @@ router.route('/cancel/:requestId').patch(authenticateToken, async (req, res) => 
     Request.findById(requestId, (err, request) => {
         if (err) return res.status(400).json(err);
         if (!request) return res.status(404).send('Request Not Found');
-        if (request.requestedBy._id !== user) return res.status(403).send('User permission denied');
+        console.log(request.requestedBy._id != user);
+        if (request.requestedBy._id != user) return res.status(403).send('User permission denied');
         Book.findById(request.book._id).then(book => {
             if (!book) return res.status(404).send('Not a Valid Book');
             if (!book.available) return res.status(400).send('Book not available');
@@ -104,7 +105,7 @@ router.route('/close/:requestId').patch(authenticateToken, async (req, res) => {
     Request.findById(requestId, (err, request) => {
         if (err) return res.status(400).json(err);
         if (!request) return res.status(404).send('Request Not Found');
-        if (request.requestedBy._id !== user) return res.status(403).send('User permission denied');
+        if (request.requestedBy._id != user) return res.status(403).send('User permission denied');
         Book.findById(request.book._id).then(book => {
             if (!book) return res.status(404).send('Not a Valid Book');
             if (!book.available) return res.status(400).send('Book not available');
