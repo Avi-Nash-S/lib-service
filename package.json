@@ -345,7 +345,7 @@
     "prettier": "2.1.2"
   },
   "scripts": {
-    "start": "concurrently \"nodemon server\" \"nodemon authServer\"",
+    "start": "concurrently \"nodemon server\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

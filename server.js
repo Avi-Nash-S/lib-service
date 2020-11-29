@@ -1,5 +1,5 @@
 const express = require('express');
-const mongoose  =require('mongoose');
+const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const env = require('dotenv');
 const cors = require('cors');
@@ -11,7 +11,7 @@ env.config();
 const PORT = process.env.PORT || 4001;
 
 const dbConnnection = mongoose.connection;
-mongoose.connect(process.env.MONGO_URI,{ useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true }).catch(err => app.response(500).send(err));
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true }).catch(err => app.response(500).send(err));
 dbConnnection.once('open', () => console.log('DB Connection established Successfully'));
 
 app.use([cors(), bodyParser.json()]);
@@ -19,7 +19,7 @@ app.use('/books', books);
 app.use('/requests', requests);
 app.use('/users', users);
 
-app.get('/', function(req, res) {
+app.get('/', function (req, res) {
     res.send('Lib-Mate App Service');
 });
 
